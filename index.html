@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#080e1a" />
+  <title>Fase 4 Mini-cut · Basic-Fit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,900;1,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:       #080e1a;
+      --bg2:      #0d1525;
+      --card:     #111e34;
+      --card2:    #152240;
+      --line:     rgba(255,255,255,.09);
+      --line2:    rgba(255,255,255,.15);
+      --text:     #f0f4ff;
+      --muted:    #8aa0c0;
+      --soft:     #c8d8f0;
+      --neon:     #00f0c8;
+      --neon2:    #00c8ff;
+      --green:    #1edd86;
+      --lime:     #b6f542;
+      --orange:   #ff8c42;
+      --red:      #ff4f6b;
+      --violet:   #9d6fff;
+      --yellow:   #f5d742;
+      --pink:     #ff6ec4;
+      --shadow:   0 24px 60px rgba(0,0,0,.45);
+      --r:        20px;
+      --r2:       14px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+```
+body {
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding-bottom: 100px;
+  background-image:
+    radial-gradient(ellipse 60% 40% at 10% 0%, rgba(0,240,200,.10) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 35% at 90% 5%, rgba(0,200,255,.08) 0%, transparent 50%),
+    radial-gradient(ellipse 80% 60% at 50% 100%, rgba(157,111,255,.07) 0%, transparent 60%);
+}
+
+/* ─── NOISE TEXTURE OVERLAY ─── */
+body::before {
+  content: "";
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  opacity: .025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.app { max-width: 720px; margin: 0 auto; padding: 16px 14px 48px; position: relative; z-index: 1; }
+
+/* ─── HERO ─── */
+.hero {
+  border-radius: 28px;
+  border: 1px solid rgba(0,240,200,.22);
+  background: linear-gradient(135deg, rgba(0,240,200,.12) 0%, rgba(0,200,255,.08) 40%, rgba(157,111,255,.10) 100%);
+  padding: 24px 20px 20px;
+  margin-bottom: 14px;
+  position: relative; overflow: hidden;
+  box-shadow: 0 2px 0 rgba(0,240,200,.25) inset, var(--shadow);
+}
+.hero::after {
+  content: "4";
+  font-family: 'Bebas Neue', sans-serif;
+  position: absolute; right: -6px; top: -20px;
+  font-size: 180px; line-height: 1;
+  color: rgba(0,240,200,.07);
+  pointer-events: none; user-select: none;
+}
+.phase-tag {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--neon); margin-bottom: 10px;
+}
+.phase-tag::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--neon); box-shadow: 0 0 8px var(--neon); }
+h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 36px; line-height: .95; letter-spacing: .02em;
+  color: var(--text); margin-bottom: 10px;
+}
+h1 span { color: var(--neon); }
+.hero-desc { font-size: 13px; color: var(--muted); line-height: 1.55; max-width: 520px; }
+.hero-stats {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 8px; margin-top: 18px;
+}
+.hstat {
+  background: rgba(0,0,0,.30); border: 1px solid var(--line);
+  border-radius: 14px; padding: 10px 8px; text-align: center;
+}
+.hstat strong { display: block; font-family: 'Bebas Neue', sans-serif; font-size: 22px; color: var(--neon); letter-spacing: .04em; }
+.hstat small { font-size: 10px; color: var(--muted); font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+
+/* ─── WEEK/DAY SELECTORS ─── */
+.nav-bar {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+  margin-bottom: 12px;
+}
+.sel-wrap { position: relative; }
+.sel-wrap::after {
+  content: "▾"; position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+  color: var(--neon); pointer-events: none; font-size: 13px;
+}
+select {
+  width: 100%; appearance: none; -webkit-appearance: none;
+  background: var(--card); border: 1px solid var(--line2);
+  color: var(--text); border-radius: var(--r2);
+  padding: 12px 36px 12px 14px; font-size: 13px; font-weight: 600;
+  font-family: inherit; outline: none;
+}
+select:focus { border-color: var(--neon); box-shadow: 0 0 0 3px rgba(0,240,200,.12); }
+
+/* ─── DAY TABS ─── */
+.day-tabs {
+  display: flex; gap: 7px; overflow-x: auto; padding: 2px 0 12px;
+  -webkit-overflow-scrolling: touch; scrollbar-width: none;
+}
+.day-tabs::-webkit-scrollbar { display: none; }
+.dtab {
+  flex: 0 0 auto; border: 1px solid var(--line);
+  background: var(--card); color: var(--muted);
+  border-radius: 999px; padding: 9px 14px;
+  font-weight: 700; font-size: 12px; cursor: pointer;
+  transition: all .18s ease; white-space: nowrap;
+}
+.dtab.active {
+  background: linear-gradient(135deg, var(--neon), var(--neon2));
+  color: #04120e; border-color: transparent;
+  box-shadow: 0 6px 20px rgba(0,240,200,.28);
+}
+.dtab.has-done { border-color: rgba(30,221,134,.35); color: var(--green); }
+
+/* ─── DAY HEADER ─── */
+.day-header {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--r); padding: 16px;
+  margin-bottom: 12px;
+}
+.day-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.day-title { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: .04em; line-height: 1; }
+.day-meta { font-size: 12.5px; color: var(--muted); line-height: 1.45; margin-top: 6px; }
+.badge {
+  display: inline-flex; align-items: center;
+  background: rgba(0,240,200,.12); border: 1px solid rgba(0,240,200,.3);
+  color: var(--neon); border-radius: 999px;
+  padding: 5px 10px; font-size: 11px; font-weight: 800;
+  white-space: nowrap; text-transform: uppercase; letter-spacing: .06em;
+}
+
+/* ─── PROGRESS BAR ─── */
+.prog-wrap { margin-top: 14px; }
+.prog-top { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-bottom: 6px; font-weight: 700; }
+.prog-track { height: 10px; background: rgba(0,0,0,.4); border-radius: 999px; overflow: hidden; border: 1px solid var(--line); }
+.prog-fill { height: 100%; width: 0; border-radius: 999px; background: linear-gradient(90deg, var(--neon), var(--neon2), var(--green)); transition: width .35s ease; box-shadow: 0 0 10px rgba(0,240,200,.4); }
+
+/* ─── CARDIO BOX ─── */
+.cardio-box {
+  background: linear-gradient(135deg, rgba(0,200,255,.08), rgba(157,111,255,.08));
+  border: 1px solid rgba(0,200,255,.2);
+  border-radius: var(--r); padding: 16px; margin-bottom: 12px;
+}
+.cardio-box h3 { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: .06em; color: var(--neon2); margin-bottom: 8px; }
+.cardio-info { font-size: 12.5px; color: var(--muted); line-height: 1.6; margin-bottom: 10px; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.cardio-done-btn {
+  width: 100%; margin-top: 10px;
+  background: linear-gradient(135deg, var(--neon2), var(--violet));
+  color: #030a14; border: none; border-radius: var(--r2);
+  padding: 12px; font-size: 13px; font-weight: 900; cursor: pointer; font-family: inherit;
+}
+.cardio-done-btn.done { background: linear-gradient(135deg, var(--green), var(--lime)); }
+
+/* ─── EXERCISE CARD ─── */
+.exercise {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 22px; padding: 0;
+  margin-bottom: 12px; overflow: hidden;
+  box-shadow: 0 8px 28px rgba(0,0,0,.22);
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+.exercise.done {
+  border-color: rgba(30,221,134,.45);
+  box-shadow: 0 0 0 2px rgba(30,221,134,.08), 0 8px 28px rgba(0,0,0,.22);
+}
+
+.ex-top {
+  display: grid; grid-template-columns: 100px 1fr;
+}
+
+/* THUMB — real exercise image */
+.ex-thumb {
+  width: 100px; height: 110px;
+  border-right: 1px solid var(--line);
+  position: relative; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  cursor: pointer;
+  background: #0a1628;
+}
+.ex-thumb img {
+  width: 100%; height: 100%; object-fit: cover;
+  display: block; transition: transform .3s ease;
+}
+.ex-thumb:hover img, .ex-thumb:active img { transform: scale(1.06); }
+.ex-thumb .play-hint {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,.75) 0%, transparent 55%);
+  display: flex; align-items: flex-end; justify-content: center;
+  padding-bottom: 6px;
+  opacity: 0; transition: opacity .18s;
+}
+.ex-thumb:hover .play-hint,
+.ex-thumb:active .play-hint { opacity: 1; }
+.play-hint span {
+  background: var(--neon); color: #04120e;
+  border-radius: 999px; padding: 3px 8px;
+  font-size: 9px; font-weight: 900; letter-spacing: .04em;
+  text-transform: uppercase;
+}
+/* fallback if image fails */
+.ex-thumb .img-fallback {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px; opacity: .5;
+}
+
+.ex-info { padding: 12px 12px 0; }
+.ex-num { font-size: 10px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 3px; }
+.ex-name { font-size: 15px; font-weight: 900; line-height: 1.2; margin-bottom: 8px; color: var(--text); }
+.ex-pills { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 8px; }
+.pill {
+  border: 1px solid var(--line); background: rgba(255,255,255,.05);
+  border-radius: 999px; padding: 4px 8px;
+  font-size: 10px; font-weight: 800; color: var(--soft);
+  text-transform: uppercase; letter-spacing: .04em;
+}
+.pill.muscle { background: rgba(0,240,200,.08); border-color: rgba(0,240,200,.2); color: var(--neon); }
+.pill.sets-pill { background: rgba(245,215,66,.08); border-color: rgba(245,215,66,.25); color: var(--yellow); }
+.pill.rir-pill { background: rgba(255,140,66,.08); border-color: rgba(255,140,66,.25); color: var(--orange); }
+
+.last-kg {
+  font-size: 11px; font-weight: 800;
+  background: rgba(245,215,66,.1); border: 1px solid rgba(245,215,66,.22);
+  color: var(--yellow); border-radius: 8px;
+  padding: 4px 8px; margin-bottom: 8px; display: inline-block;
+}
+.last-kg.none { color: var(--muted); background: transparent; border-color: var(--line); }
+.ex-obs { font-size: 12px; color: var(--muted); line-height: 1.45; padding-bottom: 12px; }
+
+/* SETS GRID */
+.sets-body { padding: 0 12px 12px; }
+.sets-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 8px; margin-bottom: 10px;
+}
+.set-box {
+  background: rgba(0,0,0,.28); border: 1px solid var(--line);
+  border-radius: 14px; padding: 10px 8px;
+}
+.set-box.completed { border-color: rgba(30,221,134,.3); background: rgba(30,221,134,.04); }
+.set-label {
+  font-size: 10px; font-weight: 800; color: var(--muted);
+  text-transform: uppercase; letter-spacing: .06em;
+  margin-bottom: 6px; display: block;
+}
+.set-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+
+input[type=text], input[type=number], input:not([type]) {
+  width: 100%; background: rgba(0,0,0,.3);
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 10px; color: var(--text);
+  padding: 9px 7px; font-size: 15px; font-weight: 700;
+  text-align: center; font-family: inherit;
+  outline: none; transition: border-color .15s;
+}
+input:focus { border-color: var(--neon); box-shadow: 0 0 0 3px rgba(0,240,200,.10); }
+input::placeholder { color: rgba(255,255,255,.2); font-size: 12px; font-weight: 500; }
+.set-hint { font-size: 9px; text-align: center; color: var(--muted); margin-top: 3px; font-weight: 600; letter-spacing: .03em; text-transform: uppercase; }
+
+textarea.notes {
+  width: 100%; background: rgba(0,0,0,.25);
+  border: 1px solid var(--line); border-radius: 12px;
+  color: var(--text); padding: 10px; font-size: 12.5px;
+  line-height: 1.45; resize: none; min-height: 40px;
+  font-family: inherit; outline: none; transition: border-color .15s;
+}
+textarea.notes:focus { border-color: var(--neon); box-shadow: 0 0 0 3px rgba(0,240,200,.08); }
+
+.ex-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+
+.btn {
+  display: flex; align-items: center; justify-content: center;
+  gap: 6px; border: none; border-radius: var(--r2);
+  padding: 11px 10px; font-family: inherit;
+  font-size: 12.5px; font-weight: 800; cursor: pointer;
+  text-decoration: none; min-height: 42px;
+  transition: transform .1s ease, box-shadow .15s ease;
+}
+.btn:active { transform: scale(.97); }
+.btn-done {
+  background: linear-gradient(135deg, var(--green), var(--lime));
+  color: #041a0d;
+}
+.btn-done.completed {
+  background: linear-gradient(135deg, #0e7a42, #5cb833);
+  box-shadow: 0 0 0 2px rgba(30,221,134,.25);
+}
+.btn-yt {
+  background: rgba(255,255,255,.07);
+  border: 1px solid var(--line2);
+  color: var(--soft);
+}
+.btn-yt:hover { background: rgba(255,255,255,.12); }
+.btn-full { grid-column: 1 / -1; }
+
+/* ─── INFO BOX ─── */
+.info-box {
+  background: var(--card); border: 1px solid var(--line);
+  border-radius: var(--r); padding: 16px; margin: 12px 0;
+}
+.info-box h3 { font-family: 'Bebas Neue', sans-serif; font-size: 18px; color: var(--neon); letter-spacing: .06em; margin-bottom: 8px; }
+.info-box p { font-size: 12.5px; color: var(--muted); line-height: 1.6; }
+
+/* ─── TOOLS BOX ─── */
+.tools-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+.tool-btn {
+  background: rgba(255,255,255,.06); border: 1px solid var(--line);
+  color: var(--soft); border-radius: var(--r2);
+  padding: 11px 10px; font-size: 12px; font-weight: 700;
+  text-align: center; cursor: pointer; font-family: inherit;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  transition: background .15s;
+}
+.tool-btn:hover { background: rgba(255,255,255,.10); }
+.tool-btn.danger { color: var(--red); border-color: rgba(255,79,107,.2); }
+
+/* ─── FLOATING NAV ─── */
+.float-nav {
+  position: fixed; bottom: 14px; left: 12px; right: 12px; z-index: 50;
+  max-width: 720px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;
+  pointer-events: none;
+}
+.float-nav button { pointer-events: auto; }
+.float-btn {
+  background: rgba(13,21,37,.90); backdrop-filter: blur(20px);
+  border: 1px solid var(--line2); border-radius: 16px;
+  color: var(--soft); font-size: 13px; font-weight: 800;
+  padding: 13px 10px; cursor: pointer; font-family: inherit;
+  transition: all .15s;
+}
+.float-btn:hover { background: rgba(0,240,200,.12); border-color: var(--neon); color: var(--neon); }
+.float-btn.center { background: linear-gradient(135deg, var(--neon), var(--neon2)); color: #04120e; border-color: transparent; }
+
+/* ─── TOAST ─── */
+.toast {
+  position: fixed; left: 50%; bottom: 90px;
+  transform: translateX(-50%) translateY(16px);
+  background: rgba(0,240,200,.95); color: #04120e;
+  border-radius: 999px; padding: 10px 18px;
+  font-size: 13px; font-weight: 800; opacity: 0;
+  transition: all .22s ease; z-index: 80; white-space: nowrap;
+  box-shadow: 0 8px 24px rgba(0,240,200,.3);
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ─── REST DAY ─── */
+.rest-day {
+  background: var(--card); border: 1px solid var(--line);
+  border-radius: var(--r); padding: 24px 20px; text-align: center;
+}
+.rest-day .rest-icon { font-size: 40px; margin-bottom: 12px; }
+.rest-day h3 { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: .06em; color: var(--muted); }
+.rest-day p { font-size: 13px; color: var(--muted); margin-top: 8px; line-height: 1.5; }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 480px) {
+  .app { padding: 12px 10px 100px; }
+  h1 { font-size: 30px; }
+  .hero-stats { grid-template-columns: repeat(2, 1fr); }
+  .sets-grid { grid-template-columns: repeat(3, 1fr); }
+  .nav-bar { grid-template-columns: 1fr; }
+  .ex-top { grid-template-columns: 84px 1fr; }
+  .ex-thumb { width: 84px; height: 100px; }
+  .float-nav { grid-template-columns: 1fr 1fr 1fr; }
+}
+
+@media (max-width: 360px) {
+  .sets-grid { grid-template-columns: 1fr 1fr; }
+}
+
+.hidden { display: none !important; }
+```
+
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <!-- HERO -->
+
+  <section class="hero">
+    <div class="phase-tag">FASE 4 · MINI-CUT · BASIC-FIT SQY OUEST</div>
+    <h1>TREINO <span>+</span><br>PROGRESSO</h1>
+    <p class="hero-desc">Hipertrofia com volume controlado. Máquinas/cabos, cardio terça·quinta·sexta. Salva pesos, reps e notas automaticamente no celular.</p>
+    <div class="hero-stats">
+      <div class="hstat"><strong>3</strong><small>Semanas</small></div>
+      <div class="hstat"><strong>4×</strong><small>Musculação</small></div>
+      <div class="hstat"><strong>55min</strong><small>Máx/treino</small></div>
+      <div class="hstat"><strong>RIR 1–2</strong><small>Principais</small></div>
+    </div>
+  </section>
+
+  <!-- WEEK / DAY SELECTORS -->
+
+  <div class="nav-bar">
+    <div class="sel-wrap">
+      <select id="weekSelect" aria-label="Semana"></select>
+    </div>
+    <div class="sel-wrap">
+      <select id="daySelect" aria-label="Dia"></select>
+    </div>
+  </div>
+
+  <!-- DAY TABS -->
+
+  <div class="day-tabs" id="dayTabs"></div>
+
+  <!-- DAY HEADER -->
+
+  <section class="day-header">
+    <div class="day-top">
+      <div>
+        <div class="day-title" id="dayTitle">Treino</div>
+        <div class="day-meta" id="dayMeta"></div>
+      </div>
+      <span class="badge" id="dayBadge">—</span>
+    </div>
+    <div class="prog-wrap">
+      <div class="prog-top">
+        <span id="progressText">0 / 0 exercícios</span>
+        <span id="weekInfo">—</span>
+      </div>
+      <div class="prog-track"><div class="prog-fill" id="progressBar"></div></div>
+    </div>
+  </section>
+
+  <!-- CARDIO -->
+
+  <section id="cardioSection" class="cardio-box hidden"></section>
+
+  <!-- EXERCISES -->
+
+  <main id="exerciseList"></main>
+
+  <!-- MINI-CUT RULES -->
+
+  <div class="info-box">
+    <h3>⚡ Regras do mini-cut</h3>
+    <p>Mantenha carga nos exercícios principais. Se cansar: corte 1 série de isoladores, não transforme tudo em leve.<br><br>Cardio <strong>Zona 2</strong>: fala frases curtas, mas não canta. Priorize bike ergométrica, elíptico e caminhada inclinada. Sem HIIT nesta fase.</p>
+  </div>
+
+  <!-- DATA TOOLS -->
+
+  <div class="info-box">
+    <h3>💾 Backup do progresso</h3>
+    <p>Dados salvos automaticamente no navegador. Para não perder, exporte antes de limpar o Safari.</p>
+    <div class="tools-grid">
+      <button class="tool-btn" onclick="exportData()">📤 Exportar</button>
+      <label class="tool-btn" for="importFile">📥 Importar</label>
+      <input id="importFile" type="file" accept="application/json" style="display:none" onchange="importData(event)" />
+      <button class="tool-btn" onclick="resetCurrentDay()">🗑 Limpar dia</button>
+      <button class="tool-btn danger" onclick="clearAllData()">⚠️ Zerar tudo</button>
+    </div>
+  </div>
+
+</div><!-- /.app -->
+
+<!-- FLOATING NAV -->
+
+<div class="float-nav">
+  <button class="float-btn" onclick="prevDay()">← Dia</button>
+  <button class="float-btn center" onclick="scrollToTop()">↑ Topo</button>
+  <button class="float-btn" onclick="nextDay()">Dia →</button>
+</div>
+
+<div class="toast" id="toast">Salvo ✓</div>
+
+<script>
+/* ══════════════════════════════════════════════════════════
+   STORAGE
+══════════════════════════════════════════════════════════ */
+const STORAGE_KEY = "fase4_minicut_v4";
+
+function loadState() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || { logs:{}, ui:{} }; }
+  catch(e) { return { logs:{}, ui:{} }; }
+}
+function saveState() {
+  state.ui = { week: selectedWeek, day: selectedDay };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+function dayKey()  { return selectedWeek + "_" + selectedDay; }
+function logKey(id){ return dayKey() + "_" + id; }
+function baseKey(id){ return "base_" + id; }
+function getLog(id){ return state.logs[logKey(id)] || {}; }
+function setLog(id, data) {
+  state.logs[logKey(id)] = { ...getLog(id), ...data };
+  if (data.sets) {
+    const lk = findLastFilledKg(data.sets);
+    if (lk) state.logs[baseKey(id)] = { lastKg: lk, date: new Date().toISOString() };
+  }
+  saveState();
+  updateProgress();
+}
+function findLastFilledKg(sets) {
+  if (!Array.isArray(sets)) return "";
+  for (let i = sets.length - 1; i >= 0; i--) {
+    const v = String(sets[i]?.kg ?? "").trim();
+    if (v !== "") return v;
+  }
+  return "";
+}
+function lastKg(id) {
+  const cur = findLastFilledKg(getLog(id).sets || []);
+  if (cur) return cur;
+  return state.logs[baseKey(id)]?.lastKg || "";
+}
+function parseSets(str) {
+  const n = parseInt(String(str).split("x")[0], 10);
+  return Number.isFinite(n) ? n : 3;
+}
+
+/* ══════════════════════════════════════════════════════════
+   DATA — WEEKS
+══════════════════════════════════════════════════════════ */
+const weeks = [
+  {
+    id:"w1", label:"Semana 1 · 27/04–03/05",
+    note:"Treinos concentrados até quinta. Sexta só cardio opcional.",
+    days:[
+      { id:"mon", name:"Seg", title:"Treino A — Pull Máquinas/Cabos", badge:"PULL", meta:"Costas + posterior ombro + bíceps. Sem peito na segunda — anti-lotação.", workout:"pull" },
+      { id:"tue", name:"Ter", title:"Treino B — Legs Máquinas + Core", badge:"LEGS", meta:"Pernas em máquinas + abdômen. Cardio zona 2 ao final ou separado.", workout:"legs", cardio:{ title:"Cardio • Terça", time:"20–25 min", mode:"Bike ergométrica, elíptico ou caminhada inclinada leve", intensity:"Zona 2 — fala frases curtas, não canta." }},
+      { id:"wed", name:"Qua", title:"Treino C — Push Máquinas/Cabos", badge:"PUSH", meta:"Peito superior + ombro lateral + tríceps. Sem cardio (inglês).", workout:"push" },
+      { id:"thu", name:"Qui", title:"Treino D — Upper Estético + Cardio", badge:"UPPER", meta:"Acabamento: costas, peito leve, ombros, braços, abs + cardio zona 2.", workout:"upper", cardio:{ title:"Cardio • Quinta", time:"20–25 min", mode:"Bike, elíptico ou virtual cycling leve/moderado", intensity:"Zona 2. Sem HIIT." }},
+      { id:"fri", name:"Sex", title:"Cardio Zona 2", badge:"CARDIO", meta:"Sem musculação. Soma gasto calórico sem atrapalhar recuperação.", workout:null, cardio:{ title:"Cardio • Sexta", time:"30–35 min", mode:"Bike ou elíptico preferencialmente", intensity:"Zona 2 constante." }},
+      { id:"sun", name:"Dom", title:"Caminhada ou Descanso", badge:"RECOVERY", meta:"Caminhada leve se bem. Descanso total se cansado.", workout:null, cardio:{ title:"Domingo", time:"30–45 min opcional", mode:"Caminhada leve", intensity:"Bem leve, circulação e gasto extra." }}
+    ]
+  },
+  {
+    id:"w2", label:"Semana 2 · 04/05–10/05",
+    note:"Mesma lógica da semana 1. Manter cargas e repetir execução.",
+    days:[
+      { id:"mon", name:"Seg", title:"Treino A — Pull Máquinas/Cabos", badge:"PULL", meta:"Repete Pull. Tente manter carga ou subir 1 repetição.", workout:"pull" },
+      { id:"tue", name:"Ter", title:"Treino B — Legs Máquinas + Core", badge:"LEGS", meta:"Pernas + cardio. Se perna pesada, escolha bike.", workout:"legs", cardio:{ title:"Cardio • Terça", time:"25–30 min", mode:"Bike ou elíptico", intensity:"Zona 2." }},
+      { id:"wed", name:"Qua", title:"Treino C — Push Máquinas/Cabos", badge:"PUSH", meta:"Push sem cardio. Foco no peitoral superior e deltoide lateral.", workout:"push" },
+      { id:"thu", name:"Qui", title:"Treino D — Upper Estético + Cardio", badge:"UPPER", meta:"Acabamento da semana + cardio curto.", workout:"upper", cardio:{ title:"Cardio • Quinta", time:"20–25 min", mode:"Bike, elíptico ou caminhada inclinada leve", intensity:"Zona 2." }},
+      { id:"fri", name:"Sex", title:"Cardio Zona 2", badge:"CARDIO", meta:"Cardio fora da musculação.", workout:null, cardio:{ title:"Cardio • Sexta", time:"30–35 min", mode:"Bike, elíptico ou virtual cycling leve/moderado", intensity:"Zona 2 constante." }},
+      { id:"sun", name:"Dom", title:"Caminhada ou Descanso", badge:"RECOVERY", meta:"Use conforme fadiga.", workout:null, cardio:{ title:"Domingo", time:"35–45 min opcional", mode:"Caminhada leve", intensity:"Muito leve." }}
+    ]
+  },
+  {
+    id:"w3", label:"Semana 3 · 11/05–17/05",
+    note:"Semana flexível: 4 treinos dispersados, 1 dia de descanso no meio.",
+    days:[
+      { id:"mon", name:"Seg", title:"Treino A — Pull", badge:"PULL", meta:"Começa com Pull. Evita peito lotado e preserve a rotina.", workout:"pull" },
+      { id:"tue", name:"Ter", title:"Cardio Zona 2", badge:"CARDIO", meta:"Cardio sem musculação.", workout:null, cardio:{ title:"Cardio • Terça", time:"30 min", mode:"Bike ou elíptico", intensity:"Zona 2." }},
+      { id:"wed", name:"Qua", title:"Treino B — Legs", badge:"LEGS", meta:"Pernas sem cardio obrigatório.", workout:"legs" },
+      { id:"thu", name:"Qui", title:"Treino C — Push + Cardio Curto", badge:"PUSH", meta:"Push + cardio curto se recuperação estiver ok.", workout:"push", cardio:{ title:"Cardio • Quinta", time:"15–20 min", mode:"Bike leve ou elíptico", intensity:"Leve/moderado. Sem HIIT." }},
+      { id:"fri", name:"Sex", title:"Cardio Zona 2", badge:"CARDIO", meta:"Cardio principal da semana.", workout:null, cardio:{ title:"Cardio • Sexta", time:"30–40 min", mode:"Bike, elíptico ou caminhada inclinada", intensity:"Zona 2." }},
+      { id:"sat", name:"Sab", title:"Treino D — Upper Estético", badge:"UPPER", meta:"Último treino da fase. Não buscar recorde.", workout:"upper" },
+      { id:"sun", name:"Dom", title:"Descanso ou Caminhada", badge:"RECOVERY", meta:"Fechamento da fase.", workout:null, cardio:{ title:"Domingo", time:"Opcional 30–45 min", mode:"Caminhada leve", intensity:"Recuperação." }}
+    ]
+  }
+];
+
+/* ══════════════════════════════════════════════════════════
+   DATA — EXERCISES
+══════════════════════════════════════════════════════════ */
+function ex(id, name, sets, rir, type, muscle, obs, yt, img) {
+  return { id, name, sets, rir, type, muscle, obs, yt, img };
+}
+
+const exercises = {
+  pull: [
+    ex("lat_pulldown","Puxada Alta Máquina / Lat Pulldown","3×6–10","RIR 1–2","Máquina/Cabo","Costas","Desça cotovelos em direção aos quadris. Não transforme em rosca de bíceps. Pegada neutra ou aberta.","lat pulldown machine proper form tutorial",
+      "https://weighttraining.guide/wp-content/uploads/2016/05/wide-grip-lat-pull-down-resized.png"),
+    ex("seated_row","Remada Baixa Máquina/Cabo Triângulo","3×8–12","RIR 1–2","Máquina/Cabo","Costas","Peito aberto, escápulas para trás, segura 1s contraído no final. Não balançar tronco.","seated cable row close grip proper form",
+      "https://weighttraining.guide/wp-content/uploads/2016/10/Straight-Back-Seated-Cable-Row-resized.png"),
+    ex("chest_row","Remada Apoiada no Peito Máquina","2×8–12","RIR 1–2","Máquina","Costas","Ótima para puxar pesado sem roubar lombar. Foco na retração da escápula.","chest supported row machine form",
+      "https://weighttraining.guide/wp-content/uploads/2018/05/Seated-Machine-Row-resized.png"),
+    ex("straight_pulldown","Pulldown Braço Reto na Polia","2×12–15","RIR 1–2","Cabo","Dorsal","Braços quase estendidos, foco no dorsal. Sente o músculo trabalhar, não os braços.","straight arm pulldown cable proper form",
+      "https://weighttraining.guide/wp-content/uploads/2016/05/Straight-Arm-Pulldown-resized.png"),
+    ex("reverse_pec","Reverse Pec Deck / Rear Delt Machine","3×12–20","RIR 0–2","Máquina","Post. Ombro","Cotovelos abertos, abas para trás. Não deixe trapézio dominar. Excelente para postura.","reverse pec deck rear delt machine form",
+      "https://weighttraining.guide/wp-content/uploads/2016/10/Reverse-Pec-Deck-resized.png"),
+    ex("biceps_machine","Rosca Máquina ou Barra EZ","2×8–12","RIR 0–2","Máquina/EZ","Bíceps","Controle total, sem jogar tronco. Descida lenta (2–3s).","ez bar curl proper form biceps",
+      "https://weighttraining.guide/wp-content/uploads/2016/05/EZ-Bar-Curl-resized.png"),
+    ex("hammer_curl","Rosca Martelo Corda ou Halter","2×10–12","RIR 0–2","Cabo/Halter","Braquial","Punho neutro, movimento limpo. Trabalha braquial e antebraço também.","rope hammer curl proper form",
+      "https://weighttraining.guide/wp-content/uploads/2016/05/Hammer-Curl-resized.png")
+  ],
+  legs: [
+    ex("hack_legpress","Hack Squat / Squat Machine / Leg Press","3×6–10","RIR 1–2","Máquina","Quadríceps","Principal do dia. Amplitude boa, joelho acompanha o pé, coluna neutra. Priorize hack squat.","hack squat machine proper form tutorial",
+      "https://weighttraining.guide/wp-content/uploads/2016/05/Hack-Squat-resized.png"),
+    ex("leg_press_medium","Leg Press Pés Médios","2×10–12","RIR 1–2","Máquina","Pernas","Pés médios, controle na descida. Não travar joelho no topo. Volume adicional de quad.","leg press proper form feet placement",
+      "https://weighttraining.guide/wp-content/uploads/2016/05/Leg-Press-resized.png"),
+    ex("leg_extension","Cadeira Extensora / Leg Extension","2×12–15","RIR 0–2","Máquina","Quadríceps","Segura 1s contraído no topo. Descida controlada. Ajuste o banco para ângulo correto.","leg extension machine proper form",
+      "https://weighttraining.guide/wp-content/uploads/2016/05/Leg-Extension-resized.png"),
+    ex("seated_legcurl","Mesa Flexora / Seated Leg Curl","3×10–15","RIR 0–2","Máquina","Post. Perna","Controla a descida (2–3s). Não levante o quadril. Prefira seated leg curl para mais amplitude.","seated leg curl proper form tutorial",
+      "https://weighttraining.guide/wp-content/uploads/2016/10/Seated-Leg-Curl-resized.png"),
+    ex("abductor","Abdutor Machine / Hip Abductor","2×12–20","RIR 0–2","Máquina","Glúteo Médio","Não roubar com tronco. Pausa curta aberto. Essencial para estabilidade de quadril.","hip abductor machine proper form",
+      "https://weighttraining.guide/wp-content/uploads/2016/10/Hip-Abduction-Machine-resized.png"),
+    ex("calf_raise","Calf Raise Machine / Panturrilha","3×10–15","RIR 0–2","Máquina","Panturrilha","Amplitude completa: alonga bem embaixo, contrai forte em cima. Pausa 1s no topo.","calf raise machine proper form tutorial",
+      "https://weighttraining.guide/wp-content/uploads/2016/05/Seated-Calf-Raise-resized.png"),
+    ex("cable_crunch","Cable Crunch / Crunch na Polia","3×10–15","RIR 0–2","Cabo","Abdômen","Enrola a coluna com abdômen, não puxa com braço. Quadril parado. Carga progressiva.","cable crunch proper form abdomen",
+      "https://weighttraining.guide/wp-content/uploads/2016/05/Cable-Crunch-resized.png")
+  ],
+  push: [
+    ex("incline_chest","Chest Press Inclinado Máquina","3×6–10","RIR 1–2","Máquina","Peito Superior","Prioridade do dia. Cotovelos 45–60°. Foco no peitoral superior — transforma silhueta.","incline chest press machine proper form",
+      "https://weighttraining.guide/wp-content/uploads/2018/05/Incline-Machine-Chest-Press-resized.png"),
+    ex("flat_chest","Chest Press Reto Máquina / Smith Bench","2×8–12","RIR 1–2","Máquina/Smith","Peito","Tensão no peito durante todo o movimento. Não perder escápulas. Estável e seguro.","machine chest press flat proper form",
+      "https://weighttraining.guide/wp-content/uploads/2018/05/Machine-Chest-Press-resized.png"),
+    ex("pec_deck","Pec Deck / Cable Fly","2×12–15","RIR 0–2","Máquina/Cabo","Peito","Controle no alongamento, sem dor no ombro. Sente o peito na posição aberta.","pec deck machine cable fly proper form",
+      "https://weighttraining.guide/wp-content/uploads/2016/10/Pec-Deck-Fly-resized.png"),
+    ex("shoulder_press","Shoulder Press Máquina","2×8–12","RIR 1–2","Máquina","Ombro","Sem exagerar amplitude se incomodar ombro. Movimento limpo, sem inclinar tronco.","shoulder press machine proper form tutorial",
+      "https://weighttraining.guide/wp-content/uploads/2018/05/Machine-Shoulder-Press-resized.png"),
+    ex("lateral_raise","Lateral Raise Machine / Cabo Unilateral","3×12–20","RIR 0–2","Máquina/Cabo","Delt. Lateral","Suba com cotovelo, não com trapézio. Cotovelo ligeiramente dobrado. Prioridade estética.","lateral raise machine cable unilateral proper form",
+      "https://weighttraining.guide/wp-content/uploads/2016/05/Dumbbell-Lateral-Raise-resized.png"),
+    ex("triceps_press","Triceps Pressdown Polia / Máquina","2×10–15","RIR 0–2","Cabo/Máquina","Tríceps","Cotovelos fixos ao lado do tronco. Extensão completa. Descida controlada.","triceps rope pressdown cable proper form",
+      "https://weighttraining.guide/wp-content/uploads/2016/05/Triceps-Rope-Pushdown-resized.png"),
+    ex("overhead_triceps","Overhead Triceps Extension Cabo","2×12–15","RIR 0–2","Cabo","Tríceps Longo","Sente alongar o tríceps. Sem abrir cotovelo demais. Cabeça longa — importante para volume.","overhead cable triceps extension proper form",
+      "https://weighttraining.guide/wp-content/uploads/2016/10/Cable-Overhead-Triceps-Extension-resized.png")
+  ],
+  upper: [
+    ex("chest_row_upper","Remada Apoiada Máquina (Upper)","3×8–12","RIR 1–2","Máquina","Costas","Costas sem exigir lombar. Movimento limpo e controlado. Retração de escápula.","chest supported row machine proper form",
+      "https://weighttraining.guide/wp-content/uploads/2018/05/Seated-Machine-Row-resized.png"),
+    ex("incline_light","Incline Chest Press ou Pec Deck","2×10–12","RIR 1–2","Máquina","Peito","Peito moderado. Não destruir recuperação. Frequência extra para desenvolvimento.","incline chest press machine light",
+      "https://weighttraining.guide/wp-content/uploads/2018/05/Incline-Machine-Chest-Press-resized.png"),
+    ex("neutral_pull","Puxada Neutra ou Pullover Cabo","2×10–15","RIR 1–2","Máquina/Cabo","Dorsal","Foco em V-shape. Escolha a opção disponível. Ótimo para largura das costas.","neutral grip lat pulldown pullover cable",
+      "https://weighttraining.guide/wp-content/uploads/2016/05/Close-Neutral-Grip-Lat-Pulldown-resized.png"),
+    ex("cable_lateral","Elevação Lateral Polia/Máquina","3×12–20","RIR 0–2","Cabo/Máquina","Delt. Lateral","Prioridade estética. Controle total. Frequência extra de lateral — muda muito o shape.","cable lateral raise unilateral proper form",
+      "https://weighttraining.guide/wp-content/uploads/2016/05/Cable-Lateral-Raise-resized.png"),
+    ex("face_reverse","Face Pull ou Reverse Pec Deck","2×12–20","RIR 0–2","Cabo/Máquina","Post. Ombro","Postura, posterior de ombro e estabilidade escapular. Essencial para saúde do ombro.","face pull cable proper form tutorial",
+      "https://weighttraining.guide/wp-content/uploads/2016/10/Face-Pull-resized.png"),
+    ex("curl_cable","Rosca Máquina / Cabo","2×10–12","RIR 0–2","Máquina/Cabo","Bíceps","Sem balanço. Últimas reps difíceis. Controle na descida.","cable curl machine biceps proper form",
+      "https://weighttraining.guide/wp-content/uploads/2016/05/Low-Cable-Curl-resized.png"),
+    ex("triceps_cable","Tríceps Máquina / Cabo","2×10–12","RIR 0–2","Máquina/Cabo","Tríceps","Extensão forte, cotovelos fixos. Fechamento semanal de braços.","triceps pressdown cable machine proper form",
+      "https://weighttraining.guide/wp-content/uploads/2016/05/Triceps-Rope-Pushdown-resized.png"),
+    ex("knee_raise","Hanging Knee Raise / Reverse Crunch","2–3×10–15","RIR 0–2","Peso Corporal","Abdômen","Sem balançar. Retroversão do quadril no final do movimento. Core ativado.","hanging knee raise reverse crunch proper form",
+      "https://weighttraining.guide/wp-content/uploads/2016/05/Hanging-Knee-Raise-resized.png")
+  ]
+};
+
+/* ══════════════════════════════════════════════════════════
+   STATE
+══════════════════════════════════════════════════════════ */
+let state = loadState();
+let selectedWeek = state.ui?.week || "w1";
+let selectedDay  = state.ui?.day  || "mon";
+
+function week(){ return weeks.find(w => w.id === selectedWeek) || weeks[0]; }
+function day(){  return week().days.find(d => d.id === selectedDay) || week().days[0]; }
+
+/* ══════════════════════════════════════════════════════════
+   RENDER
+══════════════════════════════════════════════════════════ */
+function init() {
+  const ws = document.getElementById("weekSelect");
+  ws.innerHTML = weeks.map(w => `<option value="${w.id}">${w.label}</option>`).join("");
+  ws.value = selectedWeek;
+  ws.onchange = () => { selectedWeek = ws.value; selectedDay = week().days[0].id; saveState(); render(); };
+  render();
+}
+
+function render() {
+  const w = week();
+  if (!w.days.find(d => d.id === selectedDay)) selectedDay = w.days[0].id;
+
+  document.getElementById("weekSelect").value = selectedWeek;
+
+  const ds = document.getElementById("daySelect");
+  ds.innerHTML = w.days.map(d => `<option value="${d.id}">${d.name} — ${d.badge}</option>`).join("");
+  ds.value = selectedDay;
+  ds.onchange = () => { selectedDay = ds.value; saveState(); render(); };
+
+  // TABS
+  document.getElementById("dayTabs").innerHTML = w.days.map(d => {
+    const hasDone = d.workout && (exercises[d.workout]||[]).some(e => getLog(e.id).done);
+    return `<button class="dtab ${d.id===selectedDay?'active':''} ${hasDone&&d.id!==selectedDay?'has-done':''}" onclick="selectDay('${d.id}')">${d.name}</button>`;
+  }).join("");
+
+  const d = day();
+  document.getElementById("dayTitle").textContent = d.title;
+  document.getElementById("dayMeta").textContent  = d.meta;
+  document.getElementById("dayBadge").textContent = d.badge;
+  document.getElementById("weekInfo").textContent = w.label;
+
+  renderCardio(d);
+  renderExercises(d);
+  updateProgress();
+  saveState();
+}
+
+function selectDay(id) { selectedDay = id; saveState(); render(); }
+
+/* ─── CARDIO ─── */
+function renderCardio(d) {
+  const box = document.getElementById("cardioSection");
+  if (!d.cardio) { box.classList.add("hidden"); box.innerHTML = ""; return; }
+  box.classList.remove("hidden");
+  const key  = dayKey() + "_cardio";
+  const data = state.logs[key] || {};
+  box.innerHTML = `
+    <h3>🚴 ${d.cardio.title}</h3>
+    <div class="cardio-info">
+      <strong>Tempo:</strong> ${d.cardio.time}<br>
+      <strong>Modalidade:</strong> ${d.cardio.mode}<br>
+      <strong>Intensidade:</strong> ${d.cardio.intensity}
+    </div>
+    <div class="grid2">
+      <input inputmode="decimal" placeholder="min feitos" value="${esc(data.min||"")}" oninput="saveCardio('min',this.value)" />
+      <input inputmode="decimal" placeholder="cal (opcional)" value="${esc(data.cal||"")}" oninput="saveCardio('cal',this.value)" />
+    </div>
+    <textarea class="notes" rows="2" placeholder="Notas do cardio: energia, máquina, sensação..." oninput="saveCardio('note',this.value)">${escHtml(data.note||"")}</textarea>
+
+```
+<button class="cardio-done-btn ${data.done?'done':''}" onclick="toggleCardioDone()">
+  ${data.done ? '✅ Cardio concluído!' : '▶ Marcar cardio concluído'}
+</button>
+```
+
+`;
+}
+function saveCardio(f, v) {
+const k = dayKey()+”_cardio”;
+state.logs[k] = {…(state.logs[k]||{}), [f]:v};
+saveState(); toast(“Cardio salvo”);
+}
+function toggleCardioDone() {
+const k = dayKey()+”_cardio”;
+const c = state.logs[k]||{};
+state.logs[k] = {…c, done:!c.done};
+saveState(); renderCardio(day()); toast(“Cardio atualizado ✓”);
+}
+
+/* ─── EXERCISES ─── */
+function renderExercises(d) {
+const list = document.getElementById(“exerciseList”);
+if (!d.workout) {
+list.innerHTML = ` <div class="rest-day"> <div class="rest-icon">${d.cardio ? '🚴' : '😴'}</div> <h3>${d.cardio ? 'DIA DE CARDIO' : 'DIA DE DESCANSO'}</h3> <p>${d.meta}</p> </div>`;
+return;
+}
+list.innerHTML = (exercises[d.workout]||[]).map((e, idx) => exerciseCard(e, idx)).join(””);
+}
+
+function exerciseCard(e, idx) {
+const log   = getLog(e.id);
+const done  = !!log.done;
+const count = parseSets(e.sets);
+const saved = log.sets || [];
+while (saved.length < count) saved.push({kg:””, reps:””});
+const lk    = lastKg(e.id);
+const ytUrl = “https://www.youtube.com/results?search_query=” + encodeURIComponent(e.yt);
+const muscleEmoji = {
+“Costas”:“🏋️”,“Quadríceps”:“🦵”,“Post. Perna”:“🦵”,“Pernas”:“🦵”,
+“Post. Ombro”:“💪”,“Delt. Lateral”:“💪”,“Ombro”:“💪”,
+“Peito”:“🫁”,“Peito Superior”:“🫁”,“Dorsal”:“🏋️”,
+“Bíceps”:“💪”,“Braquial”:“💪”,“Tríceps”:“💪”,“Tríceps Longo”:“💪”,
+“Abdômen”:“🔥”,“Glúteo Médio”:“🍑”,“Panturrilha”:“🦵”
+};
+const emoji  = muscleEmoji[e.muscle] || “💪”;
+const imgSrc = e.img || “”;
+
+const setsHtml = saved.slice(0, count).map((s, i) => {
+const hasFill = String(s.kg||””).trim() !== “” || String(s.reps||””).trim() !== “”;
+return `<div class="set-box ${hasFill?'completed':''}"> <span class="set-label">Série ${i+1}</span> <div class="set-inputs"> <div> <input inputmode="decimal" placeholder="kg" value="${esc(s.kg||"")}" oninput="updateSet('${e.id}',${i},'kg',this.value)" /> <div class="set-hint">KG</div> </div> <div> <input inputmode="numeric" placeholder="reps" value="${esc(s.reps||"")}" oninput="updateSet('${e.id}',${i},'reps',this.value)" /> <div class="set-hint">REPS</div> </div> </div> </div>`;
+}).join(””);
+
+const thumbHtml = imgSrc
+? `<img src="${imgSrc}" alt="${escHtml(e.name)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><div class="img-fallback" style="display:none">${emoji}</div>`
+: `<div class="img-fallback">${emoji}</div>`;
+
+return `
+
+  <article class="exercise ${done?'done':''}" id="ex-${e.id}">
+    <div class="ex-top">
+      <div class="ex-thumb" onclick="openYT('${ytUrl}')" title="Ver no YouTube como fazer">
+        ${thumbHtml}
+        <div class="play-hint"><span>▶ Ver</span></div>
+      </div>
+      <div class="ex-info">
+        <div class="ex-num">Exercício ${idx+1} de ${(exercises[day().workout]||[]).length}</div>
+        <div class="ex-name">${e.name}</div>
+        <div class="ex-pills">
+          <span class="pill sets-pill">${e.sets}</span>
+          <span class="pill rir-pill">${e.rir}</span>
+          <span class="pill">${e.type}</span>
+          <span class="pill muscle">${e.muscle}</span>
+        </div>
+        <div class="last-kg ${lk?'':'none'}" id="lk-${e.id}">${lk ? '⚡ Último: '+lk+' kg' : '➕ Ainda sem peso registrado'}</div>
+        <p class="ex-obs">${e.obs}</p>
+      </div>
+    </div>
+    <div class="sets-body">
+      <div class="sets-grid">${setsHtml}</div>
+      <textarea class="notes" rows="2" placeholder="Notas: banco, regulagem, execução, sensação..." oninput="updateNote('${e.id}',this.value)">${escHtml(log.note||"")}</textarea>
+      <div class="ex-actions">
+        <button class="btn btn-done ${done?'completed':''}" onclick="toggleDone('${e.id}')">${done ? '✅ Concluído' : '○ Marcar concluído'}</button>
+        <a class="btn btn-yt" href="${ytUrl}" target="_blank" rel="noopener">▶ Ver vídeo</a>
+      </div>
+    </div>
+  </article>`;
+}
+
+function openYT(url) { window.open(url, “_blank”, “noopener”); }
+
+function updateSet(exId, i, field, val) {
+const log   = getLog(exId);
+const e     = (exercises[day().workout]||[]).find(x => x.id === exId);
+const count = e ? parseSets(e.sets) : 3;
+const sets  = log.sets || Array.from({length:count}, ()=>({kg:””,reps:””}));
+while (sets.length < count) sets.push({kg:””,reps:””});
+sets[i] = {…(sets[i]||{}), [field]: val};
+setLog(exId, {sets});
+
+// update last-kg chip instantly
+const lk  = lastKg(exId);
+const el  = document.getElementById(“lk-”+exId);
+if (el) {
+el.textContent = lk ? “⚡ Último: “+lk+” kg” : “➕ Ainda sem peso registrado”;
+el.className   = “last-kg “ + (lk ? “” : “none”);
+}
+// update set-box style
+const box = document.querySelector(`#ex-${exId} .sets-grid .set-box:nth-child(${i+1})`);
+if (box) {
+const sets2 = getLog(exId).sets || [];
+const s = sets2[i]||{};
+const hasFill = String(s.kg||””).trim()!==”” || String(s.reps||””).trim()!==””;
+box.classList.toggle(“completed”, hasFill);
+}
+toast(“Salvo ✓”);
+}
+
+function updateNote(exId, val) { setLog(exId, {note: val}); toast(“Salvo ✓”); }
+
+function toggleDone(exId) {
+const log = getLog(exId);
+setLog(exId, {done: !log.done});
+renderExercises(day());
+toast(log.done ? “Marcado como pendente” : “Exercício concluído! 💪”);
+}
+
+function updateProgress() {
+const d   = day();
+const arr = d.workout ? (exercises[d.workout]||[]) : [];
+const cnt = arr.filter(e => getLog(e.id).done).length;
+const tot = arr.length;
+const pct = tot ? Math.round(cnt/tot*100) : 0;
+document.getElementById(“progressText”).textContent = tot ? `${cnt} / ${tot} exercícios concluídos` : “Sem musculação hoje”;
+document.getElementById(“progressBar”).style.width = pct + “%”;
+}
+
+/* ─── NAVIGATION ─── */
+function prevDay() {
+const ds = week().days; const i = ds.findIndex(d=>d.id===selectedDay);
+selectedDay = ds[Math.max(0,i-1)].id; saveState(); render();
+}
+function nextDay() {
+const ds = week().days; const i = ds.findIndex(d=>d.id===selectedDay);
+selectedDay = ds[Math.min(ds.length-1,i+1)].id; saveState(); render();
+}
+function scrollToTop() { window.scrollTo({top:0,behavior:“smooth”}); }
+
+/* ─── DATA OPS ─── */
+function resetCurrentDay() {
+if (!confirm(“Limpar apenas o dia atual?”)) return;
+const p = dayKey()+”_”;
+Object.keys(state.logs).forEach(k=>{ if(k.startsWith(p)) delete state.logs[k]; });
+saveState(); render(); toast(“Dia limpo ✓”);
+}
+function clearAllData() {
+if (!confirm(“Zerar TODO o progresso salvo? Esta ação não pode ser desfeita.”)) return;
+localStorage.removeItem(STORAGE_KEY);
+state = {logs:{},ui:{}}; selectedWeek=“w1”; selectedDay=“mon”;
+render(); toast(“Tudo zerado”);
+}
+function exportData() {
+const blob = new Blob([JSON.stringify(state,null,2)], {type:“application/json”});
+const a    = document.createElement(“a”);
+a.href     = URL.createObjectURL(blob);
+a.download = “fase4-minicut-progresso.json”;
+a.click(); URL.revokeObjectURL(a.href);
+}
+function importData(ev) {
+const file = ev.target.files[0]; if(!file) return;
+const r = new FileReader();
+r.onload = () => {
+try {
+const d = JSON.parse(r.result);
+if (!d.logs) throw new Error();
+state = d; selectedWeek = state.ui?.week||“w1”; selectedDay = state.ui?.day||“mon”;
+saveState(); render(); toast(“Importado ✓”);
+} catch(e) { alert(“Arquivo inválido.”); }
+};
+r.readAsText(file);
+}
+
+/* ─── TOAST ─── */
+let toastTimer;
+function toast(msg) {
+const t = document.getElementById(“toast”);
+t.textContent = msg; t.classList.add(“show”);
+clearTimeout(toastTimer);
+toastTimer = setTimeout(()=>t.classList.remove(“show”), 1500);
+}
+
+/* ─── HELPERS ─── */
+function esc(s)     { return String(s).replace(/”/g,’"’).replace(/’/g,’'’); }
+function escHtml(s) { return String(s).replace(/&/g,’&’).replace(/</g,’<’).replace(/>/g,’>’).replace(/”/g,’"’); }
+
+/* ─── MUSCLE SVG ILLUSTRATION (kept for reference, not used) ─── */
+function muscleSvg(muscle, idx, color) {
+const shapes = {
+“Costas”:`<path d="M36 85 L36 32 M54 85 L54 32 M72 85 L72 32 M28 44 H76 M28 66 H76" stroke="${color}" stroke-width="5.5" stroke-linecap="round"/><circle cx="60" cy="25" r="7" fill="${color}" opacity=".9"/>`,
+“Quadríceps”:`<path d="M42 88 L34 40 M56 88 L52 40 M70 88 L62 40 M82 88 L74 40 M30 50 C40 44 80 44 90 50" stroke="${color}" stroke-width="5" stroke-linecap="round"/>`,
+“Post. Perna”:`<path d="M45 88 C40 65 38 50 44 32 M55 88 C52 65 52 50 56 32 M65 88 C70 65 72 50 66 32 M38 55 Q60 48 82 55" stroke="${color}" stroke-width="5.5" stroke-linecap="round"/>`,
+“Pernas”:`<path d="M42 88 L38 30 M58 88 L58 30 M74 88 L78 30 M34 40 H86 M34 70 H86" stroke="${color}" stroke-width="5.5" stroke-linecap="round"/>`,
+“Post. Ombro”:`<ellipse cx="60" cy="45" rx="26" ry="18" fill="none" stroke="${color}" stroke-width="5.5"/><path d="M36 62 Q60 80 84 62" stroke="${color}" stroke-width="5" stroke-linecap="round"/>`,
+“Delt. Lateral”:`<path d="M28 60 Q44 32 60 28 Q76 32 92 60" stroke="${color}" stroke-width="6" stroke-linecap="round" fill="none"/><line x1="28" y1="60" x2="28" y2="78" stroke="${color}" stroke-width="5" stroke-linecap="round"/><line x1="92" y1="60" x2="92" y2="78" stroke="${color}" stroke-width="5" stroke-linecap="round"/>`,
+“Ombro”:`<path d="M28 60 Q44 32 60 28 Q76 32 92 60" stroke="${color}" stroke-width="6" stroke-linecap="round" fill="none"/><circle cx="60" cy="28" r="7" fill="${color}" opacity=".85"/>`,
+“Peito”:`<path d="M22 55 Q42 28 60 26 Q78 28 98 55 L92 70 Q76 80 60 76 Q44 80 28 70 Z" fill="none" stroke="${color}" stroke-width="5.5" stroke-linecap="round"/>`,
+“Peito Superior”:`<path d="M24 52 Q42 26 60 24 Q78 26 96 52" stroke="${color}" stroke-width="6.5" stroke-linecap="round" fill="none"/><path d="M28 62 Q44 72 60 70 Q76 72 92 62" stroke="${color}" stroke-width="5" stroke-linecap="round" fill="none"/>`,
+“Dorsal”:`<path d="M22 72 L40 36 L60 28 L80 36 L98 72 L82 78 L60 82 L38 78 Z" fill="none" stroke="${color}" stroke-width="5.5" stroke-linecap="round"/>`,
+“Bíceps”:`<path d="M38 80 L38 46 Q38 26 60 24 Q82 26 82 46 L82 80" fill="none" stroke="${color}" stroke-width="6" stroke-linecap="round"/><path d="M40 56 Q60 50 80 56" stroke="${color}" stroke-width="4" stroke-linecap="round"/>`,
+“Braquial”:`<path d="M40 80 L40 50 Q40 28 60 26 Q80 28 80 50 L80 80" fill="none" stroke="${color}" stroke-width="6" stroke-linecap="round"/>`,
+“Tríceps”:`<path d="M36 80 L32 45 L60 24 L88 45 L84 80 M32 45 Q60 60 88 45" fill="none" stroke="${color}" stroke-width="5.5" stroke-linecap="round"/>`,
+“Tríceps Longo”:`<path d="M36 82 L32 44 L60 22 L88 44 L84 82 M32 44 Q60 62 88 44 M60 22 L60 54" fill="none" stroke="${color}" stroke-width="5.5" stroke-linecap="round"/>`,
+“Abdômen”:`<rect x="38" y="24" width="44" height="16" rx="6" fill="none" stroke="${color}" stroke-width="5"/><rect x="38" y="48" width="44" height="16" rx="6" fill="none" stroke="${color}" stroke-width="5"/><rect x="38" y="72" width="44" height="14" rx="6" fill="none" stroke="${color}" stroke-width="5"/>`,
+“Glúteo Médio”:`<path d="M24 80 Q22 48 60 26 Q98 48 96 80 Q80 90 60 88 Q40 90 24 80Z" fill="none" stroke="${color}" stroke-width="5.5"/>`,
+“Panturrilha”:`<path d="M40 88 Q30 65 36 40 Q44 20 60 18 Q76 20 84 40 Q90 65 80 88" fill="none" stroke="${color}" stroke-width="5.5" stroke-linecap="round"/>`
+};
+const shape = shapes[muscle] || shapes[“Costas”];
+return `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg"> <defs> <radialGradient id="rg${idx}" cx="50%" cy="30%"> <stop offset="0%" stop-color="${color}" stop-opacity=".18"/> <stop offset="100%" stop-color="${color}" stop-opacity=".04"/> </radialGradient> </defs> <rect width="120" height="120" fill="url(#rg${idx})"/> <circle cx="100" cy="16" r="28" fill="${color}" opacity=".10"/> ${shape} <rect x="6" y="6" width="108" height="16" rx="8" fill="rgba(0,0,0,.3)"/> <text x="60" y="18" text-anchor="middle" font-family="sans-serif" font-size="9" font-weight="800" fill="${color}" letter-spacing="0.5">${muscle.toUpperCase()}</text> </svg>`;
+}
+
+/* ══════════════════════════════════════════════════════════
+BOOT
+══════════════════════════════════════════════════════════ */
+init();
+</script>
+
+</body>
+</html>
